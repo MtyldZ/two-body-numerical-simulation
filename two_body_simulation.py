@@ -117,7 +117,7 @@ class TwoBodyController:
             first_line = ""
             arr = [
                 "T={}".format(self.T),
-                "δt={:.2f}".format(self.dt),
+                "dt={:.2f}".format(self.dt),
                 "q={:.2f}".format(self.q),
                 "eccentricity={:.2f}".format(self.eccentricity),
                 "method={}".format(self.method),

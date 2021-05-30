@@ -4,6 +4,39 @@ from pygame.locals import (
 )
 
 
+def get_simulation_output_data():
+    txt_file = open("simulation.txt", "r")
+    count = 0
+    for _ in txt_file:
+        count = count + 1
+    data = [[0.0 for _ in range(4)] for _ in range(count - 1)]
+
+    txt_file.close()
+    txt_file = open("simulation.txt", "r")
+    line = txt_file.readline()
+
+    # ilk satırı dictionary ile istediğimiz veriye ulaşabilmek için böyle yaptım
+    first_line = line
+    first_line = first_line.split("__&__")
+    values = {}
+
+    for i in range(len(first_line)):
+        splitting = first_line[i].split("=")
+        if splitting[0] != "method":
+            values[splitting[0]] = float(splitting[1])
+        else:
+            values[splitting[0]] = splitting[1]
+
+    # burası diğer satırların two dimensional hali
+    for i in range(count - 1):
+        line = txt_file.readline()
+        line = [float(x) for x in line.split("__&__")]
+        data[i] = line
+
+    return values, data
+    # end of read_simulation_output //
+
+
 class TwoBodyView:
     def __init__(self):
         self.SCREEN_WIDTH = 1000
@@ -16,38 +49,6 @@ class TwoBodyView:
         self.data = []
         self.path1 = []
         self.path2 = []
-        self.read_simulation_output()
-
-    def read_simulation_output(self):
-        txt_file = open("simulation.txt", "r")
-        count = 0
-        for _ in txt_file:
-            count = count + 1
-        self.data = [[0.0 for _ in range(4)] for _ in range(count - 1)]
-
-        txt_file.close()
-        txt_file = open("simulation.txt", "r")
-        line = txt_file.readline()
-
-        # ilk satırı dictionary ile istediğimiz veriye ulaşabilmek için böyle yaptım
-        first_line = line
-        first_line = first_line.split("__&__")
-        self.values = {}
-
-        for i in range(len(first_line)):
-            splitting = first_line[i].split("=")
-            if splitting[0] != "method":
-                self.values[splitting[0]] = float(splitting[1])
-            else:
-                self.values[splitting[0]] = splitting[1]
-
-        # burası diğer satırların two dimensional hali
-        for i in range(count - 1):
-            line = txt_file.readline()
-            line = [float(x) for x in line.split("__&__")]
-            self.data[i] = line
-
-        # end of read_simulation_output //
 
     def initialize_screen(self):
         pygame.init()
@@ -126,40 +127,14 @@ class TwoBodyView:
                     self.replay()
 
 
-if __name__ == '__main__':
+def app():
+    values, data = get_simulation_output_data()
     view = TwoBodyView()
+    view.values = values
+    view.data = data
     view.initialize_screen()
     view.play()
 
-    # # Simple pygame program
-    # # Import and initialize the pygame library
-    # import pygame
-    #
-    # pygame.init()
-    #
-    # # Set up the drawing window
-    # screen = pygame.display.set_mode([500, 500])
-    #
-    # # Run until the user asks to quit
-    # running = True
-    # while running:
-    #
-    #     # Did the user click the window close button?
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.QUIT:
-    #             running = False
-    #         if event.type == KEYDOWN:
-    #             if event.key == K_SPACE:
-    #                 print("space pressed")
-    #
-    #     # Fill the background with white
-    #     screen.fill((255, 255, 255))
-    #
-    #     # Draw a solid blue circle in the center
-    #     pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
-    #
-    #     # Flip the display
-    #     pygame.display.flip()
-    #
-    # # Done! Time to quit.
-    # pygame.quit()
+
+if __name__ == '__main__':
+    app()
