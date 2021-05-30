@@ -116,14 +116,13 @@ class TwoBodyController:
             file = open("simulation.txt", "w")
             first_line = ""
             arr = [
-                "Begin",
-                "T=", self.T,
-                "δt=", "{:.2f}".format(self.dt),
-                "q=", "{:.2f}".format(self.q),
-                "eccentricity=", "{:.2f}".format(self.eccentricity),
-                "method=", self.method,
-                "m1=", self.model.masses['m1'],
-                "m2=", self.model.masses['m2'],
+                "T={}".format(self.T),
+                "δt={:.2f}".format(self.dt),
+                "q={:.2f}".format(self.q),
+                "eccentricity={:.2f}".format(self.eccentricity),
+                "method={}".format(self.method),
+                "m1={}".format(self.model.masses['m1']),
+                "m2={}".format(self.model.masses['m2']),
             ]
             for i in range(len(arr)):
                 first_line += str(arr[i]) + (sep if i != len(arr) - 1 else "\n")
