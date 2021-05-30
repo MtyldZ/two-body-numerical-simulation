@@ -93,10 +93,10 @@ class TwoBodyController:
         ]
 
     def take_user_input(self):
-        self.T = int(input("T (e.g. 10000): "))
-        self.dt = float(input("δt (e.g. 0.15): "))
+        self.T = int(input("T (e.g. 120): "))
+        self.dt = float(input("δt (e.g. 0.01): "))
         self.q = float(input("mass ratio (e.g. 0.5): "))
-        self.eccentricity = float(input("eccentricity (e.g. 1.0): "))
+        self.eccentricity = float(input("eccentricity (e.g. 0.7): "))
         self.method = input("method (e.g. runge-kutta): ")
 
         """Stable orbit reset"""

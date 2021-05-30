@@ -6,14 +6,16 @@ from pygame.locals import (
 
 class TwoBodyView:
     def __init__(self):
-        self.SCREEN_WIDTH = 800
-        self.SCREEN_HEIGHT = 800
+        self.SCREEN_WIDTH = 1000
+        self.SCREEN_HEIGHT = 1000
         self.screen = None
         # states; -1 = not initialized | 0 = stopped | 1 = playing
         self.state = -1
         self.step = 0
         self.values = {}
         self.data = []
+        self.path1 = []
+        self.path2 = []
         self.read_simulation_output()
 
     def read_simulation_output(self):
@@ -67,16 +69,30 @@ class TwoBodyView:
             return self.quit()
 
         """Draw Scene"""
+        self.screen.fill((0, 0, 0))
         points = self.data[self.step]
         scale = 100
         mid_x = self.SCREEN_WIDTH / 2
         mid_y = self.SCREEN_HEIGHT / 2
-        self.screen.fill((0, 0, 0))
-        ball1 = [(0, 255, 255), 3]
-        ball2 = [(255, 0, 0), 5]
-        pygame.draw.circle(self.screen, ball1[0], (mid_x + points[0] * scale, mid_y + points[1] * scale), ball1[1])
-        pygame.draw.circle(self.screen, ball2[0], (mid_x + points[2] * scale * -1, mid_y + points[3] * scale * -1)
-                           , ball2[1])
+        ball2 = [(255, 0, 0), 10]
+        ball1 = [(0, 255, 255), 10 * self.values['q']]
+
+        ball1_x = mid_x + points[0] * scale
+        ball1_y = mid_y + points[1] * scale
+        ball2_x = mid_x + points[2] * scale * -1
+        ball2_y = mid_y + points[3] * scale * -1
+
+        if self.state == 1:
+            self.path1.append([ball1_x, ball1_y])
+            self.path2.append([ball2_x, ball2_y])
+
+        if len(self.path1) > 1:
+            pygame.draw.lines(self.screen, ball1[0], False, self.path1)
+        if len(self.path2) > 1:
+            pygame.draw.lines(self.screen, ball2[0], False, self.path2)
+
+        pygame.draw.circle(self.screen, ball1[0], (ball1_x, ball1_y), ball1[1])
+        pygame.draw.circle(self.screen, ball2[0], (ball2_x, ball2_y), ball2[1])
         pygame.display.flip()
 
     def stop(self):
@@ -85,6 +101,8 @@ class TwoBodyView:
     def replay(self):
         self.state = 0
         self.step = 0
+        self.path1 = []
+        self.path2 = []
         self.play()
 
     def quit(self):
