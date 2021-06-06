@@ -20,8 +20,19 @@ class TwoBodyModel:
         output = ""
         for i in range(2):  # number of bodies
             for j in range(2):  # number of coordinates
-                output += str(self.positions[i][j]) + (sep if (i * j != 1) else "\n")
+                output += "{:.6f}".format(self.positions[i][j]) + (sep if (i * j != 1) else "\n")
         return output
+
+
+def euler_calculate(h: float, u: list, derivative):
+    # h: time_step
+    # u: variables
+    # derivative: function that calculates the derivatives
+    dimension = len(u)
+    du = derivative()
+
+    for i in range(dimension):
+        u[i] = u[i] + h * du[i]
 
 
 def runge_kutta_calculate(h: float, u: list, derivative):
@@ -34,6 +45,8 @@ def runge_kutta_calculate(h: float, u: list, derivative):
     dimension = len(u)
     u0 = list(u)  # copy of that list
     ut = [0.0 for _ in range(dimension)]
+
+    # print(u)
 
     for j in range(dimension):
         du = derivative()
@@ -73,7 +86,10 @@ class TwoBodyController:
         return du
 
     def update_position(self):
-        runge_kutta_calculate(self.dt, self.model.u, self.derivative)
+        if self.method == 'runge-kutta':
+            runge_kutta_calculate(self.dt, self.model.u, self.derivative)
+        if self.method == 'euler':
+            euler_calculate(self.dt, self.model.u, self.derivative)
         self.calculate_new_position()
 
     def calculate_new_position(self):
@@ -97,7 +113,7 @@ class TwoBodyController:
         self.dt = float(input("δt (e.g. 0.01): "))
         self.q = float(input("mass ratio (e.g. 0.5): "))
         self.eccentricity = float(input("eccentricity (e.g. 0.7): "))
-        self.method = input("method (e.g. runge-kutta): ")
+        self.method = input("method (e.g. runge-kutta/euler): ")
 
         """Stable orbit reset"""
         self.model.u[0] = 1
