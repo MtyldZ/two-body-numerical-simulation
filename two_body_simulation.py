@@ -46,8 +46,6 @@ def runge_kutta_calculate(h: float, u: list, derivative):
     u0 = list(u)  # copy of that list
     ut = [0.0 for _ in range(dimension)]
 
-    # print(u)
-
     for j in range(dimension):
         du = derivative()
 
@@ -103,8 +101,8 @@ class TwoBodyController:
                 -a2 * self.model.u[1],
             ],
             [
-                -a1 * self.model.u[0],
-                -a1 * self.model.u[1],
+                a1 * self.model.u[0],
+                a1 * self.model.u[1],
             ],
         ]
 

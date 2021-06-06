@@ -158,7 +158,7 @@ void calculate_position(TBC *planetry) {
     long double a2 = (planetry->mass1) / (planetry->mass2_1) * r;
     planetry->position[0][0] = -a2 * planetry->u[0];
     planetry->position[0][1] = -a2 * planetry->u[1];
-    planetry->position[1][0] = -a1 * planetry->u[0];
-    planetry->position[1][1] = -a1 * planetry->u[1];
+    planetry->position[1][0] = a1 * planetry->u[0];
+    planetry->position[1][1] = a1 * planetry->u[1];
 }
 

@@ -15,7 +15,6 @@ def get_simulation_output_data():
     txt_file = open("simulation.txt", "r")
     line = txt_file.readline()
 
-    # ilk satırı dictionary ile istediğimiz veriye ulaşabilmek için böyle yaptım
     first_line = line
     first_line = first_line.split("__&__")
     values = {}
@@ -27,7 +26,6 @@ def get_simulation_output_data():
         else:
             values[splitting[0]] = splitting[1]
 
-    # burası diğer satırların two dimensional hali
     for i in range(count - 1):
         line = txt_file.readline()
         line = [float(x) for x in line.split("__&__")]
@@ -80,8 +78,8 @@ class TwoBodyView:
 
         ball1_x = mid_x + points[0] * scale
         ball1_y = mid_y + points[1] * scale
-        ball2_x = mid_x + points[2] * scale * -1
-        ball2_y = mid_y + points[3] * scale * -1
+        ball2_x = mid_x + points[2] * scale
+        ball2_y = mid_y + points[3] * scale
 
         if self.state == 1:
             self.path1.append([ball1_x, ball1_y])
